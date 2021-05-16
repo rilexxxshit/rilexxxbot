@@ -3047,18 +3047,25 @@ break
                 case 'irii':
 			client.sendPtt(from, './lindy/iri2.mp3', id)
 			break
-                 case 'play':
-                reply(mess.wait)
-                play = body.slice(5)
-                anu = await fetchJson(`https://api.zeks.xyz/api/ytplaymp3?q=${play}&apikey=apivinz`)
-               if (anu.error) return reply(anu.error)
-                 infomp3 = `*MUSICA ENCONTRADA!!!*\nTítulo : ${anu.result.title}\nUrl : ${anu.result.source}\nTamanho : ${anu.result.size}\n\n*ESPERE UM POUQUINHO, N SPAME O CHAT*`
-                buffer = await getBuffer(anu.result.thumbnail)
-                lagu = await getBuffer(anu.result.url_audio)
-                client.sendMessage(from, buffer, image, {quoted: mek, caption: infomp3})
-                client.sendMessage(from, lagu, audio, {mimetype: 'audio/mp4', filename: `${anu.title}.mp3`, quoted: mek})
-                await limitAdd(sender)
-                break
+                 	case 'play':
+						if (args.length == 0) return reply(`Use o comando assim: .play nome_da_msc`)
+						query = args.join(" ")
+						get_result = await fetchJson(`http://api.lolhuman.xyz/api/ytplay?apikey=${menuconst.apivariados}&query=${query}`)
+						get_result = get_result.result
+						get_info = get_result.info
+						ini_txt = `Título : ${get_info.title}\n`
+						ini_txt += `Upado por : ${get_info.uploader}\n`
+						ini_txt += `Duração : ${get_info.duration}\n`
+						ini_txt += `Visualizações : ${get_info.view}\n`
+						ini_txt += `Like : ${get_info.like}\n`
+						ini_txt += `Dislike : ${get_info.dislike}\n`
+						ini_txt += `Descrição :\n ${get_info.description}\n`
+						ini_buffer = await getBuffer(get_info.thumbnail)
+						client.sendMessage(from, ini_buffer, image, { quoted: lol, caption: ini_txt })
+					reply('Enviando a musica aguarde')
+						get_audio = await getBuffer(get_result.audio[3].link)
+						client.sendMessage(from, get_audio, audio, { mimetype: 'audio/mp4', filename: `${get_info.title}.mp3`, quoted: mek})
+						break
 				case 'setnome':
                    if (!isGroup) return reply(mess.only.group)
 			       if (!isGroupAdmins) return reply(mess.only.admin)
